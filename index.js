@@ -1,9 +1,12 @@
 const FPS = 60; //frames per second
 const SHIP_SIZE = 30;
 const ROIDS_NUM = 3; //starting number of asteroids
+const ROIDS_SIZE = 100; // starting size
+const ROID_SPD = 50; // Max starting speed of asteroids in pixels per second
 const TURN_SPEED = 360; //turn speed in degrees per second
 const SHIP_THRUST = 5; // accelleration of ship 
 const FRICTION = 0.6; // 0 = no fri ction, 1 = lots of it
+const ROIDS_VERT = 10;
 
 /** @type {HTMLCanvasElement} */
 var canvas = document.getElementById("gameCanvas");
@@ -26,8 +29,11 @@ var roids = [];
 createAsteroidBelt();
 createAsteroidBelt(){
     roids = [];
+    var x,y;
     for (let i = 0; i < ROIDS_NUM; i++) {
-        roids.push(newAsteroid());
+         x = Math.floor(Math.random() * canvas.width);
+         y = Math.floor(Math.random() * canvas.height);
+        roids.push(new Roid(x,y));
         
     }
 }
@@ -86,7 +92,7 @@ function update(){
         ship.thrust.x += SHIP_THRUST * Math.cos(ship.a) / FPS;
         ship.thrust.y -= SHIP_THRUST * Math.sin(ship.a) / FPS;
         // Draw the thruster
-        ctx.fillStyle = "red"
+        ctx.fillStyle = "red";
         ctx.strokeStyle = "yellow";
         ctx.lineWidth = SHIP_SIZE / 10;
         ctx.beginPath();
@@ -167,11 +173,34 @@ function RenderShip(){
     ctx.stroke();
 }
 
+function RenderAsteroids(){
+    ctx.strokeStyle = "slategrey";
+    ctx.lineWidth = SHIP_SIZE / 20;
 
-function newAsteroid(x,y){
-    var roid = {
-        x:x,
-        y:y,
-        xv: Math.random() * ROID_SPD
+    for (let i = 0; i < roids.length; i++) {
+        /** @type {Roid} */
+        const roid = roids[i];
+        // draw a path
+        ctx.beginPath();
+        ctx.moveTo();
+        
+        // draw the poly
+
+        // move the ast
+
+        // handle edge of screen
     }
+}
+
+function Roid(x,y){
+   
+    this.x=x;
+    this.y=y;
+    this.xv= Math.random() * ROID_SPD / FPS * (Math.random() < 0.5 ? 1 : -1);
+    this.yv = Math.random() * ROID_SPD / FPS * (Math.random() < 0.5 ? 1 : -1);
+    this.r = ROIDS_SIZE /2;
+    this.a =Math.random() * Math.PI * 2; // in Rads
+    this.vert= (Math.random() * (ROIDS_VERT + 1) + ROIDS_VERT / 2);
+    
+    
 }
